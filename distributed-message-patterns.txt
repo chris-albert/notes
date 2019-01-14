@@ -23,3 +23,27 @@ Somtimes it's easy to think about how humans deal with messages in the real worl
 ### Cost of Async messages
 - In a mono app, transactions are mostly used
 - Microservices, distributed systems, and async all make transactions more difficult
+
+## Sagas
+- The saga pattern is a way of representing a long running transaction
+- Mutliple requests are managed by a Saga
+- Individual requests are run in sequence or parallel
+- When all requests complete, the Saga is complete
+- Often modeled as a finite state machine
+
+### Failures in Sagas
+- Each request is paired with a compensating action
+- If any request fails, compestatin actions are executed for all completed steps
+- The Saga is the completed with a failure
+- If a compensating action fails, then it is retried. This requires idempotence
+
+### Timeouts in a Distributed System
+- In a distributed system, timeouts present a difficult problem
+- A request timeout presenst us with 3 possible scenarios
+ - The request failed
+ - The request succeeded, but the reply failed
+ - The request is still queued and may succeed of fail
+- Because the request may have succeeded, we need to run the compensating action
+- The reqeust may still be queued, therefore the compensating action may complete first
+ - Compensating actios must be commutative
+ 
