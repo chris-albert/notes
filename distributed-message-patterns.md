@@ -47,3 +47,27 @@ Somtimes it's easy to think about how humans deal with messages in the real worl
 - The reqeust may still be queued, therefore the compensating action may complete first
  - Compensating actios must be commutative
  
+#### Compensating vs Roll Back
+- They are different
+- Rollback
+ - Implies the transaction has not completed
+ - Removed evidence of this transaction
+- Compensation
+ - Applied on top of a previously completed action
+ - Evidence of the original action remains
+ 
+### Moving forward with Failures
+- Saga's apply compensating actions to undo changed mage during previous stages
+- Al alternative approach is to move forward despite the failures
+- A Saga is coupled to failures, but if we can move forward we break this coupling
+ - Eg: 
+  - Retries
+  - Fallback to cached or default values
+  - Move failures to an error queue and process them separately
+
+### Saga pattern in Lightbend ecosystem
+- Saga's are often implemented using Akka Actors
+- Saga's can be represented as Finite State Machines
+- Actors naturally model Finite State Machines which makes them natural choice
+- Akka presistent FSM is a popular option
+  
