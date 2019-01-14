@@ -2,7 +2,7 @@
 
 Somtimes it's easy to think about how humans deal with messages in the real world.
 
-### Message driven architecture
+## Message driven architecture
 - Reactive systems put emphasis on Async, non-blockig messages
 - Messages are sent without waiting for a response
 - The sender may be interested in a response, but it comes async
@@ -71,3 +71,53 @@ Somtimes it's easy to think about how humans deal with messages in the real worl
 - Actors naturally model Finite State Machines which makes them natural choice
 - Akka presistent FSM is a popular option
   
+## Message Patterns
+
+### Two Generals
+- Illustrates the impossibility of reaching a consensus over a unreliable communication channel
+- Two armies try to coordinate a syncronized attack
+- Messengers travel through enemy territory and my be killed or captured
+- The potential loss of messengers results in an infintei ack chain
+- No matter how many acks sent, neither A or B can even be 100% sure the other is ready to attack
+- Stong consistency is impossibly
+
+### Deliver Guarantees
+- Two generals problem shows that over a unreliable network we can not guarantee message receipt
+- This means that **Exactly Once** delivery of messages is **impossible**
+- Instead we must be satisified with either:
+ - At Most Once
+ - At Least Once
+- Note: We can simulate **Exactly Once** delivery using **At Least Once** delivery and *idempotence*
+
+#### At Most Once Delivery
+- Promises that no message will ever be delivered more than once
+- An effort is made to deliver the message, but if a failure occurs we never retry.
+- No retry means:
+ - Messages are never duplicated
+ - Messages may be lost
+- Requires no storage of messages
+- Easy to implement
+
+#### At Least Once Delivery
+- Guarantess that all messages will **eventually** be deliverd
+- When a failure occurs:
+ - The message may not have been deliverd
+ - The message my have been delived, but not acked
+- Failure always result in a retry
+ - Means messages may be delieved more than once, but they are never lost
+- Required message be stored by the sender to enable retries
+
+#### Exactly Once Delivery
+- **Not Possible**
+ - In the event of a network partition, or lost message, we can't guarantee wheathr out message was received
+ - Failure requires resending the message which creates potential duplicates
+- **Exactly Once Delivery** is simulated using
+ - At least once delivery
+ - Deduplication or Idempotence
+ - Required storage on both the sender and the reciever
+ 
+#### Delivery Guarentees in the Lightbend ecosystem
+- Akka uses **At Most Once** delivery by default
+- Akka persistence has an option for **At Least Once** delivery
+- Lagom supports both through it message broker API
+- Recomendation: **At Least Once** at edge of system, and **At Most Once** inside the system
