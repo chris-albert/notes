@@ -1,0 +1,25 @@
+# Distributed Message Patters
+
+Somtimes it's easy to think about how humans deal with messages in the real world.
+
+### Message driven architecture
+- Reactive systems put emphasis on Async, non-blockig messages
+- Messages are sent without waiting for a response
+- The sender may be interested in a response, but it comes async
+
+### Advantages to Async/Non-Blocking
+- Resources can be freed immediately
+- Reduced contention (potential for higher scalability)
+- Messages can be queued for deliever in case the reciever is offline (potential for higher reliability)
+
+### Synchronous Messages
+- Async should be used in reactive system
+- Synchronous can be used, but requirements relaxed
+ - Ack message synchronously but process it async
+- The need for synchronous message should be driven by domain requirements
+- Best Practice: Use async by default, fall back to sync when forced
+ - Understand the consequences of this choice
+ 
+### Cost of Async messages
+- In a mono app, transactions are mostly used
+- Microservices, distributed systems, and async all make transactions more difficult
