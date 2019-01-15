@@ -147,3 +147,19 @@ Somtimes it's easy to think about how humans deal with messages in the real worl
   - Dependencies are more flexible
   - Coupling is lower
   - Complexity may be harder to see
+- Recomendation: Start with **Pub/Sub** and go to **Point to Point** when needed
+
+#### Message Bus
+- Both P2P and Pub/Sub can be done internally or the may leverage an external service
+- An external message bus may be used as the transport for messages
+- May use different combos of **P2P** and **Pub/Sub** with **At Most Once** or **At Least Once** delivery
+- Eg: Kafka, Rabbit MQ, Kinesis, etc.
+
+#### In Lightbend ecosystem
+- Akka
+  - Actors are typically **P2P**
+  - Distributed Publish Subscribe implements **Pub/Sub** across a cluster
+  - Persistence Query can also be used to implement **Pub/Sub**
+- Lagom
+  - Suuports **P2P** between services
+  - Message Broker API allows for **Pub/Sub** communication
